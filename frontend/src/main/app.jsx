@@ -8,12 +8,18 @@ import Logo from './../components/templates/logo'
 import Nav from './../components/templates/nav'
 import Footer from './../components/templates/footer'
 
+import { BrowserRouter } from 'react-router-dom'
+import Routes from './routes'
+
 export default props => 
-    <div className="app">
-        <Logo />
-        <Nav />
+    <BrowserRouter>
+        <div className="app">
+            <Logo />
+            <Nav />
 
-        <Home />
+            <Routes />
 
-        <Footer />
-    </div>
+            <Footer />
+        </div>
+    </BrowserRouter>
+    
