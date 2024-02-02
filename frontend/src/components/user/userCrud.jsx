@@ -25,6 +25,12 @@ export default class UserCrud extends Component{
 
     state = {...initialState}
 
+    componentWillMount(){
+        axios(baseUrl).then(resp =>{
+            this.setState({list: resp.data})
+        })
+    }
+
     clear(){
         //limpar formulario quando cancelado
         this.setState({user:initialState.user}) //para limpar o usuario
@@ -46,8 +52,7 @@ export default class UserCrud extends Component{
         //isso ocorrerá para incluir ou alterar um usuario:
 
 
-        axios[method](url, user)
-            .then(resp =>{
+        axios[method](url, user).then(resp =>{
                 const list = this.getUpdateList(resp.data) //a lista será atualizada
                 //resp.data é os dados de usuario incluidos/atualizados
 
@@ -59,11 +64,11 @@ export default class UserCrud extends Component{
         })
     }
 
-        getUpdateList(user){
+        getUpdateList(user, add=true){
             //neste caso, não há a necessidade declonar a lista visto que o filter gera uma outra lista
             const list = this.state.list.filter(u => u.id !== user.id)
-            //adicionamos o novo usuario na primeira posição da lista:
-            list.unshift(user)
+            //adicionamo ou atualizamos o novo usuario na primeira posição da lista :
+            if(add) list.unshift(user)
             //retornamos a lista:
             return list
 
@@ -81,7 +86,7 @@ export default class UserCrud extends Component{
         
          //  user[event.target.email] = event.target.value
 
-           this.setState({user:user})
+           this.setState({user})
         }
 
 
@@ -128,12 +133,60 @@ export default class UserCrud extends Component{
         )
 
     }
+    //carregar usuarios
+    load(user){
+        this.setState({user})
+    }
+
+    //deletar registro de usuario
+    remove(user){
+        axios.delete(`${baseUrl}/${user.id}`).then(resp =>{
+            const list = this.getUpdateList(resp.data, false)
+            this.setState({list})
+        })
+    }
+
+  renderTable(){
+    return(
+        <table className="table mt-4">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>E-mail</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {this.renderRows()}
+            </tbody>
+        </table>
+    )
+  }
+
+  renderRows(){
+    return this.state.list.map(user=>{
+        <tr key={user.id}>
+            <td>{user.name}</td>
+            <td>{user.email}</td>
+            <td>
+                <button className="btn btn-warning" onClick={() => this.load(user)}>
+                    <i className="fa fa-pencil"></i>
+                </button>
+                <button className="btn btn-danger ml-2" onClick={() => this.remove(user)}>
+                <i className="fa fa-trash"></i>
+                </button>
+            </td>
+        </tr>
+    })
+  }
 
    render(){
-
+    
     return(
          <Main {...headerProps}>
-            {(this.renderForm())}
+            {this.renderForm()}
+            {this.renderTable()}
          </Main>
     )
 
