@@ -40,11 +40,13 @@ export default class UserCrud extends Component{
 
         //se houver id para usuario a url será baseurl/id_doUsuario
         //se não houver um id, ou seja o usuário não estiver cadastrado a url ser´a definida como baseUrl
-        const url = user.id ? `${baseUrl}/${user.id}`
+        const url = user.id ? `${baseUrl}/${user.id}` : `${baseUrl}`
 
         // o metodo será definido com parametros pela função axios
         //isso ocorrerá para incluir ou alterar um usuario:
-        :axios[method](url, user)
+
+
+        axios[method](url, user)
             .then(resp =>{
                 const list = this.getUpdateList(resp.data) //a lista será atualizada
                 //resp.data é os dados de usuario incluidos/atualizados
@@ -67,18 +69,71 @@ export default class UserCrud extends Component{
 
         }
 
+        //para atualizar nome ou email:
+        updateField(event){
+            //clonamos this.state.user em user
+            const user = {...this.state.user}
+
+            //event.target.name nos fornece o atributo de name em initialState{user.name}
+            user[event.target.name] = event.target.value // event.target.value é o valor que será recebido pelo input
+            //este valor será atribuido ao user.name
+            //o mesmo pdão será usado para o email:
+        
+         //  user[event.target.email] = event.target.value
+
+           this.setState({user:user})
+        }
+
 
         //... para incluir novo usuario usamos post
 
 
         //para atualizar usuario existente usamos put
 
-    
+    renderForm(){
+        return (
+            <div className="form">
+                <div className="row">
+
+
+                    <div className="col-12 com-md-6">
+                        <div className="form-group">
+                            <label>Nome</label>
+                            <input type="text" className="form-control" id="name" name="name"  value={this.state.user.name} onChange={e => this.updateField(e)} placeholder="Digite o Nome..."/>
+                        </div>
+                    </div>
+
+                    <div className="col-12 com-md-6">
+                        <div className="form-group">
+                        <label>Email</label>
+                            <input type="email" className="form-control" id="email" name="email"  value={this.state.user.email} onChange={e => this.updateField(e)} placeholder="Digite o Email..."/>
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr />
+                <div className="row">
+                    <div className="col-12 d-flex justify-content-end">
+                        <button className="btn btn-primary" onClick={e => this.save(e)}>
+                            Salvar
+                        </button>
+
+                        <button className="btn btn-secondary ml-2" onClick={e => this.clear(e)}>
+                            Cancelar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        )
+
+    }
 
    render(){
+
     return(
          <Main {...headerProps}>
-            
+            {(this.renderForm())}
          </Main>
     )
 

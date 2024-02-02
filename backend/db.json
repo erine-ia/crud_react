@@ -1,13 +1,14 @@
 {
-   "users" : [{
-            "id": 1,
-            "name": "Arthur Oliveira",
-            "email": "oliveira@mail.com"
-
-        },{
-            "id": 2,
-            "name": "Luiza Souza",
-            "email": "luza@mail.com"
-        }]
-    
+  "users": [
+    {
+      "id": 1,
+      "name": "Arthur Oliveira",
+      "email": "oliveira@mail.com"
+    },
+    {
+      "id": 2,
+      "name": "Luiza Souza",
+      "email": "luza@mail.com"
+    }
+  ]
 }
